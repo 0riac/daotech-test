@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import { styled } from '@material-ui/styles';
 import { addTask } from '../../redux/taskActions';
 
-const TASK_NAME_CHAR_LIMIT = 10;
+const TASK_NAME_CHAR_LIMIT = 50;
 const MIN_TASK_NAME = 2;
 
 const AddTaskContent = styled('div')({

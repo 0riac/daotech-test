@@ -96,6 +96,7 @@ const Toolbar = ({ filterBy, setFilterValue, completedTaskCount, currentTaskCoun
           </FilterInfoLabel>
         )
       }
+      default: return null
     }
   }
 
