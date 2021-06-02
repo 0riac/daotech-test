@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+const SCROLL_MARGIN = 6;
 
 const ScrollOver = ({ scrolledContainer: _scrolledContainer, scrolledWrapper: _scrolledWrapper }) => {
   const [scrolledContainer, $scrolledContainer] = useState();
@@ -63,11 +64,11 @@ const ScrollOver = ({ scrolledContainer: _scrolledContainer, scrolledWrapper: _s
               position: 'absolute', 
               width: '8px', 
               right: '0px',
-              height: `${scrolledWrapper?.clientHeight / divider - 12}px`, 
+              height: `${scrolledWrapper?.clientHeight / divider - SCROLL_MARGIN * 2}px`, 
               top: scrolled / divider,
               background: '#d6dee1',
               'border-radius': '20px',
-              margin: '6px 0'
+              margin: `${SCROLL_MARGIN}px 0`
             }}
           />) : null} 
       </div>

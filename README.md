@@ -1,5 +1,5 @@
 ## Deployed
-https://0riac.github.io/daotesh-test
+https://0riac.github.io/daotech-test/
 
 ## Development
 ### `npm start`
