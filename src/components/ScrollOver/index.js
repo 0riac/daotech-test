@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Children } from 'react';
+import { useResizeDetector } from 'react-resize-detector';
+
 const SCROLL_MARGIN = 6;
 
 const ScrollOver = ({ scrolledContainer: _scrolledContainer, scrolledWrapper: _scrolledWrapper }) => {
@@ -30,7 +32,7 @@ const ScrollOver = ({ scrolledContainer: _scrolledContainer, scrolledWrapper: _s
     }
 
     return () => {
-      if (scrolledContainer) {
+      if (scrolledWrapper) {
         scrolledWrapper.removeEventListener('scroll', scrollEvent);
       }
     }
@@ -43,7 +45,13 @@ const ScrollOver = ({ scrolledContainer: _scrolledContainer, scrolledWrapper: _s
   }, [scrolledWrapper?.height])
 
   const overflow = scrolledContainer?.scrollHeight !== scrolledWrapper?.clientHeight;
-  const divider = scrolledContainer?.clientHeight / scrolledWrapper?.clientHeight;
+  const divider = scrolledContainer?.clientHeight / scrolledWrapper?.clientHeight;  //соотношение высоты контейнера контента и высоты видимого контента
+  const scrollHeight = scrolledWrapper?.clientHeight / divider - SCROLL_MARGIN * 2; //делим высоту видимого контента на количество видимых блоков
+  const scrollBoxOffset = scrolled / divider;
+
+  if (scrolledWrapper?.clientHeight < scrollBoxOffset + scrollHeight + SCROLL_MARGIN) {
+    requestAnimationFrame(() => scrolledWrapper.scrollTop = scrolledWrapper.scrollTop - SCROLL_MARGIN)
+  }
 
   return (
     <>
@@ -52,7 +60,7 @@ const ScrollOver = ({ scrolledContainer: _scrolledContainer, scrolledWrapper: _s
         style={{ 
           position: 'absolute', 
           right: '0px',
-          top: scrolled,
+          top: scrolled || 0,
           width: '20px', 
           height: '0%',
           display: scrollOverRef && overflow ? 'flex' : 'none',
@@ -64,11 +72,11 @@ const ScrollOver = ({ scrolledContainer: _scrolledContainer, scrolledWrapper: _s
               position: 'absolute', 
               width: '8px', 
               right: '0px',
-              height: `${scrolledWrapper?.clientHeight / divider - SCROLL_MARGIN * 2}px`, 
-              top: scrolled / divider,
+              height: `${scrollHeight}px`, 
+              top: scrollBoxOffset || 0,
               background: '#d6dee1',
-              'border-radius': '20px',
-              margin: `${SCROLL_MARGIN}px 0`
+              borderRadius: '20px',
+              margin: `${SCROLL_MARGIN}px 0`,
             }}
           />) : null} 
       </div>
@@ -77,10 +85,14 @@ const ScrollOver = ({ scrolledContainer: _scrolledContainer, scrolledWrapper: _s
 };
 
 export const AutoScrollOver = ({ children }) => {
+  const { ref } = useResizeDetector();
+
   return (
-    <div style={{ position: 'relative' }}>
-      {children}
-      <ScrollOver />
+    <div ref={ref} style={{ height: '100%', overflow: 'auto' }}>
+      <div style={{ position: 'relative' }}>
+        {children}
+        <ScrollOver />
+      </div>
     </div>
   )
 };

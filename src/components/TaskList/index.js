@@ -21,10 +21,12 @@ const Wrapper = styled('div')({
 const ListWrapper = styled('div')({
   maxHeight: '60vh',
   overflowY: 'auto',
-  '&::-webkit-scrollbar': {
+  '& ::-webkit-scrollbar': {
     display: 'none'
   },
-  scrollbarWidth: 'none'
+  '& *':{
+    scrollbarWidth: 'none'
+  }
 })
 
 const TaskList = ({ list = [], changeTaskStatus, removeTask }) => {
@@ -34,10 +36,9 @@ const TaskList = ({ list = [], changeTaskStatus, removeTask }) => {
         <AutoScrollOver>
           <Grid container direction='column'>
             {list.map((props, i) => (
-              <Grid item>
+              <Grid key={props.id}  item>
                 <TaskListItemWrapper>
                   <Task 
-                    key={props.id} 
                     {...props} 
                     changeTaskStatus={() => changeTaskStatus(props.id)}
                     removeTask={() => removeTask(props.id)}
